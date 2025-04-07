@@ -19,6 +19,7 @@ API接口（Application Programming Interface）
 
 import requests  # 导入requests库，用于发送HTTP请求
 import pandas as pd
+import os
 def diting_dpk(url):
     """
     向服务端发送HDF5文件的函数
@@ -28,11 +29,11 @@ def diting_dpk(url):
         dict: 服务端返回的JSON响应数据，出错时返回None
     """
         
-    answer = pd.read_csv("/home/disk/disk01/wzm/Sustech_Pulse/tutorial/exam202506/T1.an.txt",sep='\s+' ,usecols=[ 0 , 2 , 4],names=['filename','P' ,'S'])
+    answer = pd.read_csv("/home/disk/wd_black/wzm/Sustech_Pulse/test_data/07-an/T1.an",sep='\s+' ,usecols=[ 0 , 2 , 4],names=['filename','P' ,'S'])
     predict_list = []
-    for i in range(len(answer)):
+    for i in range(5,7):
         file_name  = answer.iloc[i,0]
-        st_filepath = '/home/disk/disk01/wzm/Sustech_Pulse/tutorial/exam202506/'+file_name[9:]
+        st_filepath = '/home/disk/wd_black/wzm/Sustech_Pulse/test_data/07-exam/'+file_name[2:]
         # 文件二进制编码
         # 打包文件准备发送
         files = {
@@ -64,11 +65,12 @@ def diting_mag(url):
         dict: 服务端返回的JSON响应数据，出错时返回None
     """
         
-    answer = pd.read_csv("/home/disk/disk01/wzm/Sustech_Pulse/tutorial/exam202506/T2.an.txt",sep='\s+' ,names=['filename','magnitude'])
+    answer = pd.read_csv("/home/disk/wd_black/wzm/Sustech_Pulse/test_data/07-an/T2.an",sep='\s+' ,names=['filename','magnitude'])
     predict_list = []
-    for i in range(len(answer)):
+    for i in range(5):
         file_name  = answer.iloc[i,0]
-        st_filepath = '/home/disk/disk01/wzm/Sustech_Pulse/tutorial/exam202506/'+file_name[9:]
+        #file_name  = os.path.basename(file_name)
+        st_filepath = '/home/disk/wd_black/wzm/Sustech_Pulse/test_data/07-exam/'+file_name[2:]
         # 文件二进制编码
         # 打包文件准备发送
         files = {
@@ -100,10 +102,10 @@ def diting_cls(url):
         dict: 服务端返回的JSON响应数据，出错时返回None
     """
         
-    answer = pd.read_csv("/home/disk/disk01/wzm/Sustech_Pulse/tutorial/exam202506/T3.an.txt",sep='\s+' ,names=['filename','class'])
-    for i in range(len(answer)):
+    answer = pd.read_csv("/home/disk/wd_black/wzm/Sustech_Pulse/test_data/07-an/T3.an",sep='\s+' ,names=['filename','class','name'])
+    for i in range(5):
         file_name  = answer.iloc[i,0]
-        st_filepath = '/home/disk/disk01/wzm/Sustech_Pulse/tutorial/exam202506/'+file_name[9:]
+        st_filepath = '/home/disk/wd_black/wzm/Sustech_Pulse/test_data/07-exam/'+file_name[2:]
         # 文件二进制编码
         # 打包文件准备发送
         files = {
@@ -130,20 +132,23 @@ def diting_cls(url):
 if __name__ == "__main__":
     import time
     t1 = time.time()
-    url = "http://118.145.178.53:8989/diting_dpk"
+    ip = "118.145.133.95:8989"
+    # ip = "127.0.0.1:8989"
+
+    url = f"http://{ip}/diting_dpk"
     result = diting_dpk(url)
     t2 = time.time()
     print('API time: {:}'.format(t2-t1))
     # 如果有返回结果则打印
 
-    # t1 = time.time()
-    # url = "http://118.145.178.53:8989/diting_cls"
-    # result = diting_cls(url)
-    # t2 = time.time()
-    # print('API time: {:}'.format(t2-t1))
+    t1 = time.time()
+    url = f"http://{ip}/diting_cls"
+    result = diting_cls(url)
+    t2 = time.time()
+    print('API time: {:}'.format(t2-t1))
 
-    # t1 = time.time()
-    # url = "http://118.145.178.53:8989/diting_mag"
-    # result = diting_cls(url)
-    # t2 = time.time()
-    # print('API time: {:}'.format(t2-t1))
+    t1 = time.time()
+    url = f"http://{ip}/diting_mag"
+    result = diting_cls(url)
+    t2 = time.time()
+    print('API time: {:}'.format(t2-t1))
